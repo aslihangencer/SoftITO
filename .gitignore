@@ -1,3 +1,4 @@
 .env
 .env.local
 google_services_json
+DS_Store
