@@ -1,157 +1,350 @@
-class Urun {
+abstract class Urun {
   String id;
   String ad;
   double fiyat;
   int stok;
-  String tip;
 
-  Urun(this.id, this.ad, this.fiyat, this.stok, this.tip);
+  Urun(this.id, this.ad, this.fiyat, this.stok);
+}
 
+// Sadece kargolanabilen ürünler bu sınıftan türetilir.
+abstract class KargolanabilirUrun extends Urun {
+  KargolanabilirUrun(
+    String id,
+    String ad,
+    double fiyat,
+    int stok,
+  ) : super(id, ad, fiyat, stok);
+
+  double kargoUcretiHesapla();
+}
+
+class FizikselUrun extends KargolanabilirUrun {
+  FizikselUrun(
+    String id,
+    String ad,
+    double fiyat,
+    int stok,
+  ) : super(id, ad, fiyat, stok);
+
+  @override
   double kargoUcretiHesapla() {
     return 29.90;
   }
 }
 
 class DijitalUrun extends Urun {
-  DijitalUrun(String id, String ad, double fiyat, int stok)
-      : super(id, ad, fiyat, stok, "DIJITAL");
+  DijitalUrun(
+    String id,
+    String ad,
+    double fiyat,
+    int stok,
+  ) : super(id, ad, fiyat, stok);
+}
 
+// OCP: Ödeme yöntemleri abstraction üzerinden tanımlanıyor.
+abstract class OdemeYontemi {
+  void odemeYap(double tutar);
+}
+
+class KrediKartiOdeme implements OdemeYontemi {
   @override
-  double kargoUcretiHesapla() {
-    throw Exception("Dijital urunlerde kargo hesaplanamaz!");
+  void odemeYap(double tutar) {
+    print("$tutar TL Kredi kartindan POS ile cekildi.");
   }
 }
 
-abstract class ISiparisIslemleri {
-  void siparisKaydet(String orderId, double tutar);
-  void odemeYap(String tip, double tutar);
-  void kargoGonder(String orderId, String adres);
+class HavaleOdeme implements OdemeYontemi {
+  @override
+  void odemeYap(double tutar) {
+    print("$tutar TL Havale kontrol edildi.");
+  }
+}
+
+class KapidaOdeme implements OdemeYontemi {
+  @override
+  void odemeYap(double tutar) {
+    print("$tutar TL Kapida odeme tahsil edilecek.");
+  }
+}
+
+class CryptoOdeme implements OdemeYontemi {
+  @override
+  void odemeYap(double tutar) {
+    print("$tutar TL USDT transferi onaylandi.");
+  }
+}
+
+// ISP: Her servis yalnızca kendi sorumluluğunu tanımlar.
+// Veritabani için ayrı abstraction.
+abstract class Veritabani {
+  void kaydet(String orderId, double tutar);
+}
+
+class SqliteVeritabani implements Veritabani {
+  @override
+  void kaydet(String orderId, double tutar) {
+    print(
+      "DB calistirildi: "
+      "INSERT INTO siparisler VALUES ('$orderId', $tutar)",
+    );
+  }
+}
+
+// ISP: Mail işlemleri ayrı abstraction.
+abstract class MailServisi {
   void mailGonder(String email, String mesaj);
+}
+
+class SmtpMailServisi implements MailServisi {
+  @override
+  void mailGonder(String email, String mesaj) {
+    print("SMTP Mail gonderildi: $email");
+  }
+}
+
+// ISP: SMS işlemleri ayrı abstraction.
+abstract class SmsServisi {
   void smsGonder(String tel, String mesaj);
-  void faturaYazdir(String orderId);
 }
 
-class SqliteVeritabani {
-  void kaydet(String sql) {
-    print("DB calistirildi: " + sql);
-  }
-}
-
-class SmtpMailServisi {
-  void mailAt(String to, String body) {
-    print("SMTP Mail gonderildi: " + to);
-  }
-}
-
-class NetgsmSmsServisi {
-  void smsYolla(String gsm, String text) {
-    print("SMS iletildi: " + gsm);
-  }
-}
-
-class SiparisYoneticisi implements ISiparisIslemleri {
-  SqliteVeritabani db = SqliteVeritabani();
-  SmtpMailServisi mailci = SmtpMailServisi();
-  NetgsmSmsServisi smsci = NetgsmSmsServisi();
-
+class NetgsmSmsServisi implements SmsServisi {
   @override
-  void siparisKaydet(String orderId, double tutar) {
-    db.kaydet("INSERT INTO siparisler VALUES ('$orderId', $tutar)");
+  void smsGonder(String tel, String mesaj) {
+    print("SMS iletildi: $tel");
   }
+}
 
-  @override
-  void odemeYap(String tip, double tutar) {
-    if (tip == "KREDI_KARTI") {
-      print("$tutar TL Kredi kartindan POS ile cekildi.");
-    } else if (tip == "HAVALE") {
-      print("$tutar TL Havale kontrol edildi.");
-    } else if (tip == "KAPIDA_ODEME") {
-      print("$tutar TL Kapida odeme tahsil edilecek (Komisyon +15 TL).");
-    } else if (tip == "CRYPTO") {
-      print("$tutar TL USDT transferi onaylandi.");
-    } else {
-      print("Gecersiz odeme yontemi");
-    }
-  }
+// ISP: Kargo işlemleri ayrı abstraction.
+abstract class KargoServisi {
+  void kargoGonder(String orderId, String adres);
+}
 
+class MngKargoServisi implements KargoServisi {
   @override
   void kargoGonder(String orderId, String adres) {
     print("MNG Kargo takip fis basildi: $adres");
   }
+}
 
-  @override
-  void mailGonder(String email, String mesaj) {
-    mailci.mailAt(email, mesaj);
-  }
+// ISP: Fatura işlemleri ayrı abstraction.
+abstract class FaturaServisi {
+  void faturaYazdir(String orderId);
+}
 
-  @override
-  void smsGonder(String tel, String mesaj) {
-    smsci.smsYolla(tel, mesaj);
-  }
-
+class PdfFaturaServisi implements FaturaServisi {
   @override
   void faturaYazdir(String orderId) {
     print("Fatura PDF cikarildi: $orderId");
   }
+}
+
+// İndirim işlemleri için abstraction.
+abstract class IndirimStratejisi {
+  double uygula(double toplam);
+}
+
+class Indirim10 implements IndirimStratejisi {
+  @override
+  double uygula(double toplam) {
+    return toplam * 0.90;
+  }
+}
+
+class Yaz20Indirimi implements IndirimStratejisi {
+  @override
+  double uygula(double toplam) {
+    return toplam * 0.80;
+  }
+}
+
+class Sepette50Indirimi implements IndirimStratejisi {
+  @override
+  double uygula(double toplam) {
+    return toplam - 50;
+  }
+}
+
+class IndirimsizIndirim implements IndirimStratejisi {
+  @override
+  double uygula(double toplam) {
+    return toplam;
+  }
+}
+
+class SiparisYoneticisi {
+ final Veritabani veritabani;
+  final OdemeYontemi odemeYontemi;
+  final MailServisi mailServisi;
+  final SmsServisi smsServisi;
+  final KargoServisi kargoServisi;
+  final FaturaServisi faturaServisi;
+  IndirimStratejisi indirimStratejisi;
+
+  // DIP: Bağımlılıklar dışarıdan veriliyor.
+  SiparisYoneticisi(
+    this.veritabani,
+    this.odemeYontemi,
+    this.mailServisi,
+    this.smsServisi,
+    this.kargoServisi,
+    this.faturaServisi,
+    this.indirimStratejisi,
+  );
 
   void siparisTamamla(
-      String orderId,
-      List<Urun> sepet,
-      String odemeTipi,
-      String musteriAdi,
-      String email,
-      String tel,
-      String adres,
-      String kuponKodu) {
-    
+    String orderId,
+    List<Urun> sepet,
+    String musteriAdi,
+    String email,
+    String tel,
+    String adres,
+  ) {
+    stokKontrolEt(sepet);
+
+    double toplam = toplamHesapla(sepet);
+
+    toplam = indirimStratejisi.uygula(toplam);
+
+    double sonTutar = kdvHesapla(toplam);
+
+    odemeYontemi.odemeYap(sonTutar);
+
+    veritabani.kaydet(orderId, sonTutar);
+
+    faturaServisi.faturaYazdir(orderId);
+
+    bildirimGonder(
+      musteriAdi,
+      email,
+      tel,
+      orderId,
+      sonTutar,
+    );
+
+    kargoGonder(orderId, adres, sepet);
+
+    stoklariAzalt(sepet);
+  }
+
+  // SRP: Stok kontrolü ayrı bir metoda ayrıldı.
+  void stokKontrolEt(List<Urun> sepet) {
+    for (Urun urun in sepet) {
+      if (urun.stok <= 0) {
+        throw StateError("${urun.ad} tukenmis!");
+      }
+    }
+  }
+
+  // SRP: Toplam hesaplama ayrı bir metoda ayrıldı.
+  double toplamHesapla(List<Urun> sepet) {
     double toplam = 0;
 
-    for (var i = 0; i < sepet.length; i++) {
-      if (sepet[i].stok <= 0) {
-        print("Hata: " + sepet[i].ad + " tukenmis!");
-        return;
+    for (Urun urun in sepet) {
+      toplam += urun.fiyat;
+
+      if (urun is KargolanabilirUrun) {
+        toplam += urun.kargoUcretiHesapla();
       }
-      toplam += sepet[i].fiyat;
-      toplam += sepet[i].kargoUcretiHesapla();
-      sepet[i].stok--;
     }
 
-    if (kuponKodu == "INDIRIM10") {
-      toplam = toplam * 0.90;
-    } else if (kuponKodu == "YAZ20") {
-      toplam = toplam * 0.80;
-    } else if (kuponKodu == "SEPETTE50") {
-      toplam = toplam - 50;
-    }
+    return toplam;
+  }
 
+  // SRP: KDV hesaplama ayrı bir metoda ayrıldı.
+  double kdvHesapla(double toplam) {
     double kdv = toplam * 0.20;
-    double sonTutar = toplam + kdv;
+    return toplam + kdv;
+  }
 
-    odemeYap(odemeTipi, sonTutar);
-    siparisKaydet(orderId, sonTutar);
-    faturaYazdir(orderId);
-    mailGonder(email, "Sayin $musteriAdi, siparisiniz alindi. Tutar: $sonTutar TL");
-    smsGonder(tel, "Siparisiniz onaylandi: $orderId");
-    kargoGonder(orderId, adres);
+  // SRP: Bildirim işlemleri ayrı metoda ayrıldı.
+  void bildirimGonder(
+    String musteriAdi,
+    String email,
+    String tel,
+    String orderId,
+    double sonTutar,
+  ) {
+    mailServisi.mailGonder(
+      email,
+      "Sayin $musteriAdi, siparisiniz alindi. "
+      "Tutar: $sonTutar TL",
+    );
+
+    smsServisi.smsGonder(
+      tel,
+      "Siparisiniz onaylandi: $orderId",
+    );
+  }
+
+  // Sadece fiziksel ürün varsa kargo gönderilir.
+  void kargoGonder(
+    String orderId,
+    String adres,
+    List<Urun> sepet,
+  ) {
+    bool fizikselUrunVar = false;
+
+    for (Urun urun in sepet) {
+      if (urun is KargolanabilirUrun) {
+        fizikselUrunVar = true;
+        break;
+      }
+    }
+
+    if (fizikselUrunVar) {
+      kargoServisi.kargoGonder(orderId, adres);
+    }
+  }
+
+  // SRP: Stok azaltma ayrı metoda ayrıldı.
+  void stoklariAzalt(List<Urun> sepet) {
+    for (Urun urun in sepet) {
+      urun.stok--;
+    }
   }
 }
 
 void main() {
-  var siparisci = SiparisYoneticisi();
+  // Kullanılacak ödeme yöntemi seçiliyor.
+  OdemeYontemi odeme = KrediKartiOdeme();
 
-  var urun1 = Urun("1", "Kablosuz Mouse", 450.0, 5, "FIZIKSEL");
-  var urun2 = DijitalUrun("2", "Flutter Kursu E-Kitap", 150.0, 100);
+  // Bağımlılıklar SiparisYoneticisi'ne dışarıdan veriliyor.
+  SiparisYoneticisi siparisci = SiparisYoneticisi(
+    SqliteVeritabani(),
+    odeme,
+    SmtpMailServisi(),
+    NetgsmSmsServisi(),
+    MngKargoServisi(),
+    PdfFaturaServisi(),
+    Indirim10(),
+  );
 
-  var sepet = <Urun>[urun1, urun2];
+  FizikselUrun urun1 = FizikselUrun(
+    "1",
+    "Kablosuz Mouse",
+    450.0,
+    5,
+  );
+
+  DijitalUrun urun2 = DijitalUrun(
+    "2",
+    "Flutter Kursu E-Kitap",
+    150.0,
+    100,
+  );
+
+  List<Urun> sepet = [
+    urun1,
+    urun2,
+  ];
 
   siparisci.siparisTamamla(
     "SP-9921",
     sepet,
-    "KREDI_KARTI",
     "Selahaddin",
     "selahaddin@kodvance.com",
     "05551112233",
     "Kadikoy / Istanbul",
-    "INDIRIM10",
   );
 }
