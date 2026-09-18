@@ -1,0 +1,308 @@
+/* 
+   0) NORMALİZE EDİLMEMİŞ TABLO
+ */
+
+CREATE TABLE UniversiteSpaghetti (
+    OgrenciNo INT,
+    OgrenciAdSoyad VARCHAR(100),
+    Telefonlar VARCHAR(100),
+    BolumBilgisi VARCHAR(100),
+    DanismanBilgisi VARCHAR(100),
+    AlinanDersler VARCHAR(255),
+    DersBolumKodu VARCHAR(50)
+);
+
+INSERT INTO UniversiteSpaghetti
+VALUES
+(
+    101,
+    'Ece Kaya',
+    '05331112233, 05093334455',
+    'B1-Bilgisayar Mühendisliği',
+    'D01-Prof.Dr. Mehmet Öz',
+    'Matematik, Fizik',
+    'D1','D2'
+),
+(
+    102,
+    'Barış Dinç',
+    '05559998877',
+    'B2-Elektronik',
+    'D02-Doç.Dr. Ali Can',
+    'Devre Teorisi, Matematik',
+    'B2'
+);
+
+
+/* 
+   1NF
+  
+   - Telefonlar ayrı satırlara ayrılır.
+   - Dersler ayrı satırlara ayrılır.
+   - Her hücrede tek değer bulunur.
+*/
+
+CREATE TABLE Universite_1NF (
+    OgrenciNo INT,
+    OgrenciAdSoyad TEXT,
+    Telefon TEXT,
+    BolumKodu TEXT,
+    BolumAdi TEXT,
+    DanismanID TEXT,
+    DanismanAdi TEXT,
+    DersAdi TEXT,
+    DersBolumKodu TEXT,
+
+    PRIMARY KEY (OgrenciNo, Telefon, DersAdi)
+);
+
+INSERT INTO Universite_1NF
+VALUES
+(101, 'Ece Kaya', '05321112233',
+ 'B1', 'Bilgisayar Mühendisliği',
+ 'D01', 'Prof.Dr. Mehmet Öz',
+ 'Matematik', 'D1'),
+
+(101, 'Ece Kaya', '05321112233',
+ 'B1', 'Bilgisayar Mühendisliği',
+ 'D01', 'Prof.Dr. Mehmet Öz',
+ 'Fizik', 'D3'),
+
+(101, 'Ece Kaya', '05423334455',
+ 'B1', 'Bilgisayar Mühendisliği',
+ 'D01', 'Prof.Dr. Mehmet Öz',
+ 'Matematik', 'D1'),
+
+(101, 'Ece Kaya', '05423334455',
+ 'B1', 'Bilgisayar Mühendisliği',
+ 'D01', 'Prof.Dr. Mehmet Öz',
+ 'Fizik', 'D3'),
+
+(102, 'Barış Dinç', '05559998877',
+ 'B2', 'Elektronik',
+ 'D02', 'Doç.Dr. Ali Can',
+ 'Devre Teorisi', 'D2');
+
+
+
+/*
+   2NF
+   
+   - Öğrenci bilgileri ayrı tabloya alınır.
+   - Telefonlar öğrenciyle ayrı ilişkilendirilir.
+   - Ders bilgileri ayrı tabloya alınır.
+   - Öğrenci-ders ilişkisi ara tabloya alınır.
+*/
+
+CREATE TABLE Ogrenciler_2NF (
+    OgrenciNo INT PRIMARY KEY,
+    OgrenciAdSoyad VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE OgrenciTelefonlari_2NF (
+    OgrenciNo INT,
+    Telefon VARCHAR(20),
+
+    PRIMARY KEY (OgrenciNo, Telefon),
+
+    FOREIGN KEY (OgrenciNo)
+        REFERENCES Ogrenciler_2NF(OgrenciNo)
+);
+
+CREATE TABLE Dersler_2NF (
+    DersKodu TEXT PRIMARY KEY,
+    DersAdi TEXT NOT NULL,
+    DersBolumKodu TEXT NOT NULL
+);
+
+CREATE TABLE OgrenciDers_2NF (
+    OgrenciNo INT,
+    DersKodu TEXT,
+
+    PRIMARY KEY (OgrenciNo, DersKodu),
+
+    FOREIGN KEY (OgrenciNo)
+        REFERENCES Ogrenciler_2NF(OgrenciNo),
+
+    FOREIGN KEY (DersKodu)
+        REFERENCES Dersler_2NF(DersKodu)
+);
+
+INSERT INTO Ogrenciler_2NF
+VALUES
+(101, 'Ece Kaya'),
+(102, 'Barış Dinç');
+
+INSERT INTO OgrenciTelefonlari_2NF
+VALUES
+(101, '05331112233'),
+(101, '05093334455'),
+(102, '05559998877');
+
+INSERT INTO Dersler_2NF
+VALUES
+('D1', 'Matematik', 'B1'),
+('D3', 'Fizik', 'B1'),
+('D2', 'Devre Teorisi', 'B2');
+
+INSERT INTO OgrenciDers_2NF
+VALUES
+(101, 'D1'),
+(101, 'D3'),
+(102, 'D2');
+
+
+/* 
+   3NF:
+   - Bölüm bilgileri ayrı tabloya alınır.
+   - Hoca bilgileri ayrı tabloya alınır.
+   - Bölüm-danışman ilişkisi oluşturulur.
+   - Öğrenci sadece BolumKodu tutar.
+   - Ders sadece kendi bölümünün BolumKodu değerini tutar.
+ */
+
+CREATE TABLE Hocalar (
+    DanismanID VARCHAR(10) PRIMARY KEY,
+    DanismanAdi VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Bolumler (
+    BolumKodu VARCHAR(10) PRIMARY KEY,
+    BolumAdi VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE BolumDanismanlari (
+    BolumKodu VARCHAR(10) PRIMARY KEY,
+    DanismanID VARCHAR(10) NOT NULL,
+
+    FOREIGN KEY (BolumKodu)
+        REFERENCES Bolumler(BolumKodu),
+
+    FOREIGN KEY (DanismanID)
+        REFERENCES Hocalar(DanismanID)
+);
+
+CREATE TABLE Ogrenciler (
+    OgrenciNo INT PRIMARY KEY,
+    OgrenciAdSoyad VARCHAR(100) NOT NULL,
+    BolumKodu VARCHAR(10) NOT NULL,
+
+    FOREIGN KEY (BolumKodu)
+        REFERENCES Bolumler(BolumKodu)
+        ON DELETE RESTRICT
+);
+
+CREATE TABLE OgrenciTelefonlari (
+    TelefonID INT PRIMARY KEY AUTO_INCREMENT,
+    OgrenciNo INT NOT NULL,
+    Telefon TEXT NOT NULL,
+
+    UNIQUE (OgrenciNo, Telefon),
+
+    FOREIGN KEY (OgrenciNo)
+        REFERENCES Ogrenciler(OgrenciNo)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE Dersler (
+    DersKodu TEXT PRIMARY KEY,
+    DersAdi TEXT NOT NULL,
+    BolumKodu TEXT NOT NULL,
+
+    FOREIGN KEY (BolumKodu)
+        REFERENCES Bolumler(BolumKodu)
+        ON DELETE RESTRICT
+);
+
+CREATE TABLE OgrenciDers (
+    OgrenciNo INT,
+    DersKodu TEXT,
+
+    PRIMARY KEY (OgrenciNo, DersKodu),
+
+    FOREIGN KEY (OgrenciNo)
+        REFERENCES Ogrenciler(OgrenciNo)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (DersKodu)
+        REFERENCES Dersler(DersKodu)
+        ON DELETE RESTRICT
+);
+
+   ---3NF VERİLERİ
+
+INSERT INTO Hocalar
+(DanismanID, DanismanAdi)
+VALUES
+('D01', 'Prof.Dr. Mehmet Öz'),
+('D02', 'Doç.Dr. Ali Can');
+
+INSERT INTO Bolumler
+(BolumKodu, BolumAdi)
+VALUES
+('B1', 'Bilgisayar Mühendisliği'),
+('B2', 'Elektronik');
+
+INSERT INTO BolumDanismanlari
+(BolumKodu, DanismanID)
+VALUES
+('B1', 'D01'),
+('B2', 'D02');
+
+INSERT INTO Ogrenciler
+(OgrenciNo, OgrenciAdSoyad, BolumKodu)
+VALUES
+(101, 'Ece Kaya', 'B1'),
+(102, 'Barış Dinç', 'B2');
+
+INSERT INTO OgrenciTelefonlari
+(OgrenciNo, Telefon)
+VALUES
+(101, '05331112233'),
+(101, '05093334455'),
+(102, '05559998877');
+
+INSERT INTO Dersler
+(DersKodu, DersAdi, BolumKodu)
+VALUES
+('D1', 'Matematik', 'B1'),
+('D3', 'Fizik', 'B1'),
+('D2', 'Devre Teorisi', 'B2');
+
+INSERT INTO OgrenciDers
+(OgrenciNo, DersKodu)
+VALUES
+(101, 'D1'),
+(101, 'D3'),
+(102, 'D2');
+
+
+
+---NORMALİZE VERİYİ BİRLİKTE GÖRÜNTÜLEME
+
+SELECT
+    o.OgrenciNo,
+    o.OgrenciAdSoyad,
+    ot.Telefon,
+    b.BolumKodu,
+    b.BolumAdi,
+    h.DanismanID,
+    h.DanismanAdi,
+    d.DersKodu,
+    d.DersAdi
+FROM Ogrenciler AS o
+LEFT JOIN OgrenciTelefonlari AS ot
+    ON o.OgrenciNo = ot.OgrenciNo
+INNER JOIN Bolumler AS b
+    ON o.BolumKodu = b.BolumKodu
+INNER JOIN BolumDanismanlari AS bd
+    ON b.BolumKodu = bd.BolumKodu
+INNER JOIN Hocalar AS h
+    ON bd.DanismanID = h.DanismanID
+INNER JOIN OgrenciDers AS od
+    ON o.OgrenciNo = od.OgrenciNo
+INNER JOIN Dersler AS d
+    ON od.DersKodu = d.DersKodu
+ORDER BY
+    o.OgrenciNo,
+    d.DersKodu;
