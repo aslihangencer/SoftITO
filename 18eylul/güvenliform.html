@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Güvenli Form ve Regex Doğrulama</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+           max-width: 450px;
+            margin: auto;
+            background-color: #fafafa;
+        }
+        .field {
+            margin-bottom: 6px;
+        }
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            font-size: 100%;
+            padding: 10px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        input:user-invalid {
+            border-color: #ef4444;background-color: #fef2f2;
+        }
+        input.user-valid {
+            border-color: #10b981;background-color: #f0fdf4;
+        }
+        .err{
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        input:user-invalid+.err{
+            display: block;
+        }
+        hp-trap{
+            display: none;
+        }
+        button {
+            width: 100%;
+            background-color: #10b981;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+        }
+        </style>
+        <div class="hint"> {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        </div>
+</head>
+<body>
+<h3>Kurumsal Kayıt Formu</h3>
+<form action="/kayit" method="POST" oninput="outTaksit.value=parseInt(taksite.value) * 1250">
+    <input type="text" name="bot_check" class="hp-trap" tabindex="-1" autocomplete="off">   
+    <div class="field">
+        <label for="tc">TC Kimlik NO(11HANE):</label>
+        <input type="text" id="tc" "  required inputmode="numeric" maxLength="11"
+ <span class="err">Lütfen geçerli bir TC Kimlik Numarası giriniz. (11 haneli)</span>
+        <div class="err">Lütfen geçerli bir TC Kimlik Numarası giriniz. (11 haneli)</div>
+        <div class="field">
+            <label for="tel">Cep Telefonu:</label>
+            <input type="tel" id="tel" name="phone" required pattern="^[0-9]{10}$" title="Lütfen geçerli bir cep telefonu numarası giriniz. (10 haneli)">
+            <span class="err">Lütfen geçerli bir cep telefonu numarası giriniz. (10 haneli)</span>
+        </div>
+        <div class="field">
+            <label for="password">Güçlü Şifre:</label>
+            <input type="password" id="password" name="password" required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+            <span class="err">Şifre en az 8 karakter uzunluğunda olmalı, en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.</span>
+               
+        </div>
+        <button type="submit">Kayıt Ol</button>
+    </div>
+</body>
+</html>

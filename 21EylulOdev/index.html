@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miss Dior Perfume</title>
+    <style>
+        body{
+            font-family:"Cormorant Garamond", sans-serif;
+            background: #F7F5F0;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .card{
+            background-color: #F8EDEF;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 55px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+            border: 1px solid #e2e8f0
+
+        }
+        h3{
+            margin-top: 0;;
+            color:#111111;
+        }
+        iframe{
+            width: 100%;
+            border-radius: 8px;
+            border: none;
+        }
+         label {
+            display: block;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        progress,
+        meter {
+            width: 100%;
+            height: 24px;
+            margin-bottom: 8px;
+            background-color: #F8EDEF;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #64748b
+        }
+         .box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        details {
+            margin-bottom: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            color: #1e40af;
+        }
+
+        details[open] {
+            background: #eff6ff;
+        }
+
+        details p {
+            font-size: 13px;
+            color: #334155;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        dialog {
+            border: none;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 360px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        dialog::backdrop {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blue(3px);
+        }
+
+        .btn-modal {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+          .player-container {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: opacity 0.3s ease;
+        }
+    #openModal {
+    background-color: #111111;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+   dialog {
+    width: 400px;
+    border: none;
+    border-radius: 15px;
+    padding: 30px;
+    background-color: #E5E4E2;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+      dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+        .button-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .left-controls,
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        button {
+            background: none;
+            border: none;
+            color: #A86F7A;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        button:hover {
+            background: #111111;
+        }
+
+        .speed-badge {
+            background: #0284c7;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>Dior Perfume Web sitesi ve video</h3>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/fbZev3Tx2zA?si=VDETa1Z0eGqjPNYv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <br>
+     
+            <h2 style="margin-bottom: 16px;">Parfüm Reklamı</h2>
+      <div class="player-container" id="videoBox">
+         <video controls playsinline width="100%" style="border-radius: 8px;">
+      <source src="https://www.pexels.com/download/video/6810589/" type="video/mp4">
+    Tarayıcınız HTML5 video etiketini desteklemiyor.</video>
+        </div>
+
+
+        <iframe class="dior-frame" src="https://www.sephora.com.tr/p/miss-dior-P10017595.html" title="sephora web sitesi-miss dior parfüm" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <!---Sephora 'nın web sitesi açmaya izin vermediği için boşluk oluşuyor.-->
+    <br>
+    <iframe class="Sephora-Istanbul-Map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24102.97703458561!2d29.042161079101565!3d40.96238000000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac7eda6cebd8b%3A0x344ae087fbd929e9!2sSephora%20Ba%C4%9Fdat%20Caddesi!5e0!3m2!1str!2str!4v1790044050314!5m2!1str!2str" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+     
+    
+  
+
+        <label for="m1">Stok (15%-kritik düşük):</label>
+        <meter value="30" id="m1" min="0" max="100" low="20" high="80" optimum="90"></meter>
+        <div class="hint">Kiritik Seviyede olduğu için tarayıcı bunu otomatik <strong>Kırmızı</strong> renkle uyarır! </div>
+        <div class="hint">Birden fazla kullanıcının sepetinde ise <strong>Sarı</strong> rengini alır.</div>
+        <div class="hint">Stok yenilenmiş ise <strong>Yeşil</strong> rengini alır.</div>
+        <br>
+    </div>
+
+    <div class="box">
+        <h3>Sıkça Sorulan Sorular</h3>
+        <details open>
+            <summary>Parfüm ortalama kaç saat kalıcıdır ?</summary>
+            <p>Ortalam 8 ila 12 saate kadar kalıcıdır.</p>
+        </details>
+        <details>
+            <summary>Satın alacağımız parfümü kişiselleştirebiliyor muyuz?</summary>
+            <p>Ürünü size en yakın bulunan mağazamıza götürdüğünüz zaman kişiselleştirebilirsiniz,online olarak kişiselleştirme yapılmamaktadır.</p>
+        </details>
+        <details>
+            <summary>Bu parfüm serisinin kaç farklı parfümü vardır?</summary>
+            <p> Dior Türkiye'deki Miss Dior koleksiyonunda şu anda Eau de Parfum, Essence, Parfum ve Blooming Bouquet olmak üzere 4 ana parfüm çeşidi listeleniyor.</p>
+        </details>
+    </div>
+
+
+    <div class="box">
+        <h3>Kampanya Bildirimi</h3>
+        <p style="font-size: 13px;color: #111111;">Aşağıdaki butona basarak modalı açabilirsiniz</p>
+        <button class="btn-modal" onclick="document.getElementById('indirimModal').showModal()">Kuponu Göster</button>
+    </div>
+
+    <dialog id="indirimModal">
+        <h3 style="margin-top: 0;">%14 indirim kuponu</h3>
+        <p style="font-size: 13px;color: #C41E3A;">Sevgililer gününe özel indirim kodunuz:</p>
+        <div
+            style="background: #C41E3A;padding: 10px;text-align: center;font-weight: bold;border-radius: 6px;color:black">
+            VALENTINO2027
+        </div>
+        <div style="margin-top: 16px;text-align: right;background-color: #E5E4E2;">
+            <div>
+                <button onclick="document.getElementById('indirimModal').close()" style="padding: 6px 12px;color: #111111;border-radius: 4px;cursor: pointer;">
+                    Kapat
+                </button>
+            </div>
+        </div>
+    </dialog>
+    
+    <button id="openModal" onclick="document.getElementById('infoModal').showModal()">Detaylı Bilgi Al</button>
+
+<dialog id="infoModal">
+    <h2>Miss Dior</h2>
+    <p>Miss Dior, zarif ve çiçeksi karakteriyle öne çıkan popüler bir parfüm serisidir.</p>
+    <button id="closeModal" onclick="document.getElementById('infoModal').close()">Kapat</button>
+</dialog>
+  
+</script>
+</body>
+</html>

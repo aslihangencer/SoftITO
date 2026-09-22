@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>interaktif htlml5</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: lawngreen;
+        margin: auto;
+        padding: 20px;
+        max-width: 500px;
+    }
+
+    .box {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+    details {
+   margin-bottom: 10px;
+    border: 1px solid #e2e8f0;
+   padding: 10px;
+    }
+    summary {
+    font-weight: bold;
+    cursor: pointer;
+    color: #1e40af;
+}
+details[open] { background: #eff6ff;}
+    detail p {
+        font-size: 13px;
+        color: #334155;
+        margin-top: 8px;
+        margin-bottom: 0px;
+    }
+    diolag{
+        border: none;
+        border-radius: 12px;
+        padding: 24px;
+        max-width: 360px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    dialog::backdrop{
+        background-color: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blue(3px);
+    }
+     .btnmodal {
+        padding: 10px ;
+        border: none;
+        border-radius: 6px;
+        background-color: #333;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+        
+    </style>
+</head>
+<body>
+     
+
+    <div class="box">
+        <h3>Sıkça Sorulan Sorular</h3>
+        <details open>
+            <summary>kargo teslimatı ne kadardır</summary>
+            <p>siparişleirmiz aynı gün kargoya verilir</p>
+        </details>
+        <details>
+            <summary>Taksit seçenekleri nelerdir</summary>
+            <p>Tüm kredi kartlatına vadesiz 3 taksit</p>
+        </details>
+    </div>
+    <div class="box">
+        <h3>Kampanya bildirimi</h3>
+        <p style="font-size: 13px;color: #64748b">modalı başlatabilirsiniz</p>
+        <button class="btn-modal" onclick=""document.getElementById('indirimModal').showModal()">kuponu göster</button>
+    </div>
+
+    <diolag id="indirimModal">
+        <h3 style="margin-top: 0;">%20 indirim</h3>
+        <p style="font-size: 13px; color: darkgreen;">SoftITO ÖZEL İNDİRİM</p>
+    <div style="background: #f1f5f9; padding: 10px; text-align: center; font-weight: bold; border-radius: 6px; color: #000;">SOFTITO2026</div>
+       <div style="margin-top: 16px;text-align: right;">
+        <div>
+            <button onclick="document.getElementById('indirimModal').close()" style="padding: 6px 12px;border-radius: 4px;cursor: pointer;">
+                kapat
+            </button>
+        </div>
+    </div>
+</diolag>
+</body>
+</html>

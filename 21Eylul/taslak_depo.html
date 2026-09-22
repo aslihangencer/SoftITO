@@ -1,0 +1,195 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline-first Taslak & Sepet Depolama</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f8fafc;
+            color: #333;
+            padding: 24px;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background: darkgreen;
+            color: white;
+        }
+
+        .btn-clear {
+            background: darkred;
+            color: #e0f2fe;
+        }
+
+        .status-mg {
+            font-size: 12px;
+            color: #10b981;
+            margin-top: 8px;
+            font-weight: 600;
+            min-height: 18px;
+        }
+    </style>
+</head>
+<body>  
+    <div class="card">
+        <span class="badge">Otomotatik offline kayıt aktif</span>
+        <h3>Müşteri Arıza </h3>
+        <p style="font-size:12px;color:#64748b;margin-bottom: 16px;">Tarayıcı kapatsanız bile kayıtlar durur</p>
+
+        <form id="supportForm">
+            <div class="form-group">
+                <label for="txtName">müşteri Adı </label>
+                <input type="text" id="txtName" name="name" placeholder="Ahmet Yılmaz">
+            </div>
+<div class="form-group">
+<label for="txtDevice">cihaz modeli</label>
+ <input type="text" 
+        name="device" 
+        id="txtDevice" 
+        placeholder="iPhone 18 Pro & AAS651461"
+    >
+</div>
+
+<div class="form-group">
+    <label for="txtDesc">Açıklama</label>
+
+    <textarea 
+        name="description" 
+        id="txtDesc" 
+        placeholder="Cihaz arızasını açıklayınız..."
+    ></textarea>
+</div>
+<div class="status-mg" id="statusLog"></div>
+
+<div class="btn-group">
+    <button type="submit" class="btn-submit">Kaydı Tamamla</button>
+    <button type="button" id="btnClear"
+    class="btn-clear">taslağı sıfırla</button>
+</div>
+
+<script>
+    const STORAGE_KEY='sellahaddin_support_softito';
+    const form=document.getElementById('supportForm');
+    const nameInput=document.getElementById('txtName')
+    const deviceInput=document.getElementById('txtDevice')
+    const descInput=document.getElementById('txtDesc')
+    const statusLog = document.getElementById('statusLog')
+    const btnClear = document.getElementById('btnClear')
+
+
+window.addEventListener('DOMContentLoaded', ()=>{
+    const savedData=localStorage.getItem(STORAGE_KEY);
+    if(savedData){
+        try {
+            const draft=JSON.parse(savedData);
+            nameInput.value=draft.name ||"";
+            deviceInput.value=draft.device ||"";
+            descInput.value=draft.description ||"";
+            statusLog.innerText = `Önceki taslak geri yüklendi (${draft.lastSaved || ''})`;
+        } catch(e){
+            console.error("Taslak parse hatası:" , e);
+        }
+    }
+ })
+
+form.addEventListener('input', () => {
+    const draftData={
+        name:nameInput.value,
+        device:deviceInput.value,
+        description:descInput.value,
+        lastSaved:new Date().toLocaleTimeString('tr-TR')
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(draftData));
+        statusLog.innerText = `taslak kaydoldu: ${draftData.lastSaved}`;
+       }); 
+
+
+// form gönderildiğinde başarılı mesajı verip taslağı temizlemek
+form.addEventListener('submit',()=>{
+    e.preventDefault();
+    alert('destek talebiniz merkeze ulaştı.');
+    localStorage.removeItem(STORAGE_KEY);
+    form.reset();
+    statusLog.innerText('form temizlendi,taslak silindi.')
+    }); 
+
+    btnClear.addEventListener('click',()=>{
+        if(confirm('taslağı silmekten emin misiniz?')){
+            localStorage.removeItem(STORAGE_KEY);
+            form.reset();
+            statusLog.innerText='taslak silindi.';
+         }
+})
+
+window.addEventListener('storage', (event) => {
+    if(event.key===STORAGE_KEY && event.newValue){
+        const remoteDraft=JSON.parse(event.newValue);
+        nameInput.value = remoteDraft.name ||"";
+        deviceInput.value = remoteDraft.device ||"";
+        descInput.value = remoteDraft.description ||"";
+        statusLog.innerText = `Diğer sekmeden güncellendi ${remoteDraft.lastSaved || ''}`;
+    }
+});
+
+
+</script>
+
+</body>
+</body>  
+</html>
