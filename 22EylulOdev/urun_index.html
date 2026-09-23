@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>New Balance - Ürün Detay & Sepet</title>
+    <style>
+        *,
+        *::before,*::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .product-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: #ffffff;
+            min-height: 100vh;
+            padding-bottom: 90px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2f3542;
+        }
+        .header-icons .icon {
+            font-size: 18px;
+            margin-left: 15px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+        .header-icons .icon:hover {
+            transform: translateY(-3px);
+        }
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background-color: #f1f2f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .badge {
+            position: absolute;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            z-index: 10;
+        }
+        .discount-badge {
+            top: 15px;
+            left: 15px;
+            background-color: #ff4757;
+            color: #ffffff;
+        }
+        .shipping-badge {
+            bottom: 15px;
+            right: 15px;
+            background-color: #2ed573;
+            color: #ffffff;
+        }
+        .product-info {
+            padding: 20px 20px 10px;
+        }
+        .brand {
+            font-size: 13px;
+            color: #747d8c;
+            margin-bottom: 5px;
+        }
+        .product-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2f3542;
+        }
+        .rating-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .review-count {
+            margin-left: 8px;
+            color: #57606f;
+        }
+        .price-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .current-price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2f3542;
+        }
+        .old-price {
+            font-size: 15px;
+            color: #a4b0be;
+            text-decoration: line-through;
+        }
+        .extra-actions-section {
+            padding: 10px 20px 15px;
+            border-bottom: 1px solid #f1f2f6;
+            margin-bottom: 15px;
+        }
+        .installment-info {
+            font-size: 13px;
+            color: #2f3542;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .action-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .action-icon {
+            font-size: 15px;
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        .action-link {
+            font-size: 14px;
+            color: #2f3542;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .action-link:hover {
+            color: #ff4757;
+        }
+        .size-section {
+            padding: 0 20px 20px;
+        }
+        .size-section h3 {
+            font-size: 15px;
+            margin-bottom: 10px;
+            color: #2f3542;
+        }
+        .size-chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .size-chip {
+            padding: 10px 18px;
+            background-color: #f1f2f6;
+            border: 1px solid #dfe4ea;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .size-chip:hover,
+        .size-chip.active {
+            background-color: #2f3542;
+            color: #ffffff;
+            border-color: #2f3542;
+        }
+        .description-section {
+            padding: 0 20px 20px;
+            font-size: 14px;
+            color: #57606f;
+            line-height: 1.5;
+        }
+        .description-section h3 {
+            font-size: 15px;
+            color: #2f3542;
+            margin-bottom: 8px;
+        }
+        .fixed-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background-color: #ffffff;
+            padding: 15px 20px;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .price-info .label {
+            display: block;
+            font-size: 11px;
+            color: #747d8c;
+        }
+        .price-info .bar-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2f3542;
+        }
+        .add-to-cart-btn {
+            background-color: #ff4757;
+            color: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #ff6b81;
+        }
+        .detail-box {
+            margin: 0 20px;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .detail-box summary {
+          padding: 15px 0;
+          font-size: 15px;
+          color: #2f3542;
+          cursor: pointer;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+           list-style: none;
+        }
+
+      .detail-box summary::-webkit-details-marker {
+          display: none;
+        }
+
+       .detail-box summary::after {
+         content: "+";
+         font-size: 20px;
+         color: #747d8c;
+        }
+
+       .detail-box[open] summary::after {
+         content: "−";
+        }
+       .detail-content {
+         padding: 0 0 15px;
+         font-size: 14px;
+         line-height: 1.6;
+         color: #57606f;
+      }
+        .detail-content p {
+          margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="product-container">
+        <header class="sticky-header">
+            <div class="logo">👟 AuraStep</div>
+            <div class="header-icons">
+                <span class="icon">🔍</span>
+                <span class="icon">🛒</span>
+            </div>
+
+        </header>
+
+        <div class="image-wrapper">
+            <span class="badge discount-badge">%6 İndirim </span>
+            <span class="badge shipping-badge">🚚 Kargo Bedava</span>
+
+            <img
+                src="https://newbalance.sm.mncdn.com/mnresize/1600/-/newbalance/products/NBU5302V3_1.jpg"
+                alt="New Balance 530 Gri Unisex Günlük Ayakkabı"
+                class="product-img"
+            >
+
+        </div>
+
+        <section class="product-info">
+            <p class="brand">Unisex Günlük Giyim </p>
+
+            <h1 class="product-title">New Balance 530 Gri Unisex Günlük Giyim</h1>
+
+            <div class="rating-box">
+               <span class="stars">⭐⭐⭐⭐⭐</span>
+                <span class="review-count">4.9 (342 Değerlendirme)</span>
+            </div>
+
+            <div class="price-box">
+                <span class="current-price">7.499,00 ₺</span>
+                <span class="old-price"> 7.999,00 ₺</span>
+            </div>
+
+        </section>
+
+
+        <section class="extra-actions-section">
+
+            <p class="installment-info">3 aya kadar taksit seçenekleri</p>
+
+            <div class="action-item">
+                <span class="action-icon">🏷️</span>
+                <a href="#" class="action-link">Fiyatı düşünce haber ver</a>
+            </div>
+
+            <div class="action-item">
+                <span class="action-icon">🤍</span>
+                <a href="#" class="action-link">Favorilerine Ekle</a>
+
+            </div>
+
+            <div class="action-item">
+               <span class="action-icon">🔗</span>
+                <a href="#" class="action-link">Paylaş</a>
+
+            </div>
+
+        </section>
+
+        <section class="size-section">
+
+            <h3>Numara Seçimi</h3>
+            <div class="size-chip-list">
+                <button class="size-chip">37</button>
+                <button class="size-chip">37.5</button>
+                 <button class="size-chip">38</button>
+                <button class="size-chip">38.5</button>
+                <button class="size-chip">39.5</button>
+                <button class="size-chip">40</button>
+
+            </div>
+
+        </section>
+
+       <details class="detail-box">
+
+    <summary><strong>Ürün Açıklaması</strong></summary>
+
+    <div class="detail-content">
+        <p>
+            Orijinal MR530, milenyum dönemi estetiğini yüksek kilometreli
+            koşu ayakkabılarının güvenilirliğiyle bir araya getiriyordu.
+            Yeniden yorumlanan 530, performans odaklı bu tasarıma çağdaş
+            ve günlük kullanıma uygun bir stil anlayışı kazandırıyor.
+            Segmentlere ayrılmış ABZORB orta taban, klasik file ve sentetik
+            katmanlardan oluşan saya tasarımıyla birleşiyor. Akıcı kıvrımlar
+            ve keskin hatlardan yararlanan bu yapı, modele kendine özgü ve
+            yüksek teknolojili bir görünüm kazandırıyor.
+        </p>
+
+    </div>
+
+</details>
+
+
+<details class="detail-box">
+    <summary><strong>Ürün Detayları</strong></summary>
+
+    <div class="detail-content">
+        <p><strong>Taban:</strong> ABZORB orta taban</p>
+        <p><strong>Saya:</strong> File saya</p>
+        <p><strong>Katman:</strong> Sentetik katmanlar</p>
+        <p><strong>Kapama:</strong> Geleneksel bağcıklı kapama sistemi</p>
+        <p><strong>Ürün Kodu:</strong> U5302V3 </p>
+        <p><strong>Materyal:</strong> 5% Sentetik, 46% Tekstil, 49% İnek Derisi</p>
+
+    </div>
+
+</details>
+
+
+    </main>
+
+    <footer class="fixed-bottom-bar">
+
+        <div class="price-info">
+            <span class="label">Toplam Fiyat</span>
+            <span class="bar-price">7.499,00 ₺</span>
+        </div>
+
+        <button class="add-to-cart-btn">
+            Sepete Ekle
+        </button>
+
+    </footer>
+
+</body>
+</html>
+
