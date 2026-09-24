@@ -1,0 +1,590 @@
+:root {
+    --black: #171717;
+    --white: #ffffff;
+    --bg: #f6f6f4;
+    --gray: #777777;
+    --line: #e2e2e2;
+    --green: #d9ff00;
+    --red: #e94242;
+    --radius: 18px;
+    --shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--black);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    display: block;
+    width: 100%;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.75);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(12px);
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.menu {
+    display: none;
+    gap: 22px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.menu a:hover {
+    color: var(--red);
+}
+
+.actions {
+    display: flex;
+    gap: 6px;
+}
+
+.actions button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: transparent;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.actions button:hover {
+    background-color: var(--green);
+    transform: translateY(-3px);
+}
+
+.hero,
+.brands,
+.categories,
+.products,
+.campaign {
+    width: calc(100% - 32px);
+    max-width: 1200px;
+    margin: auto;
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 40px 0 70px;
+}
+
+.hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.hero-text span,
+.section-heading span,
+.campaign span {
+    color: var(--gray);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.hero-text span::before {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 7px;
+    border-radius: 50%;
+    background-color: #38bd45;
+    content: "";
+    animation: pulse 1.5s infinite;
+}
+
+.hero h1 {
+    max-width: 9ch;
+    margin: 12px 0;
+    font-size: clamp(2.7rem, 10vw, 5.7rem);
+    line-height: 0.95;
+    letter-spacing: -3px;
+}
+
+.hero p {
+    max-width: 400px;
+    margin-bottom: 22px;
+    color: var(--gray);
+    line-height: 1.5;
+}
+
+.hero-button {
+    padding: 14px 20px;
+    border-radius: 30px;
+    background-color: var(--black);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.hero-button:hover {
+    background-color: var(--green);
+    color: var(--black);
+    transform: translateY(-4px);
+}
+
+.hero-shoe {
+    min-height: 300px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background-color: var(--green);
+}
+
+.hero-shoe img {
+    height: 300px;
+    object-fit: cover;
+    transition: 0.5s;
+}
+
+.hero-shoe:hover img {
+    transform: scale(1.06);
+}
+
+.brands,
+.categories,
+.products {
+    padding-bottom: 70px;
+}
+
+.section-heading {
+    margin-bottom: 25px;
+}
+
+.section-heading h2,
+.campaign h2 {
+    margin-top: 5px;
+    font-size: clamp(1.8rem, 4vw, 2.7rem);
+    letter-spacing: -2px;
+}
+
+.brand-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.brand-list a {
+    display: grid;
+    min-height: 62px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background-color: var(--white);
+    font-size: 12px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.brand-list a:hover {
+    background-color: var(--black);
+    box-shadow: var(--shadow);
+    color: var(--white);
+    transform: translateY(-5px);
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.category-card {
+    position: relative;
+    min-height: 230px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background-color: var(--black);
+    transition: 0.3s;
+}
+
+.category-card img {
+    height: 230px;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: 0.5s;
+}
+
+.category-card div {
+    position: absolute;
+    right: 20px;
+    bottom: 18px;
+    left: 20px;
+    color: var(--white);
+}
+
+.category-card h3 {
+    font-size: 25px;
+}
+
+.category-card p {
+    font-size: 14px;
+}
+
+.category-card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-8px);
+}
+
+.category-card:hover img {
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+.product-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.product-heading > a {
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.product-heading > a:hover {
+    color: var(--red);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+.product-card {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--white);
+    transition: 0.3s;
+}
+
+.product-card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-8px);
+}
+
+.product-image {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 0.85;
+    background-color: #eeeeee;
+}
+
+.product-image img {
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.08);
+}
+
+.badge {
+    position: absolute;
+    z-index: 1;
+    top: 12px;
+    left: 12px;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background-color: var(--green);
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.sale {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+.favorite {
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 20px;
+    backdrop-filter: blur(8px);
+    transition: 0.3s;
+}
+
+.favorite:hover {
+    background-color: var(--black);
+    color: var(--white);
+    transform: scale(1.1);
+}
+
+.product-info {
+    padding: 16px;
+}
+
+.product-info > span,
+.product-info p {
+    color: var(--gray);
+    font-size: 13px;
+}
+
+.product-info h3 {
+    margin: 4px 0;
+    font-size: 18px;
+}
+
+.product-price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.product-price button {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--green);
+    font-size: 22px;
+    transition: 0.3s;
+}
+
+.product-price button:hover {
+    background-color: var(--black);
+    color: var(--white);
+    transform: rotate(90deg);
+}
+
+.campaign {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 70px;
+    padding: 45px 25px;
+    border-radius: var(--radius);
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.campaign::after {
+    position: absolute;
+    top: -70px;
+    right: -70px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background-color: var(--green);
+    content: "";
+}
+
+.campaign div {
+    position: relative;
+    z-index: 1;
+}
+
+.campaign span {
+    color: var(--green);
+}
+
+.campaign h2 {
+    max-width: 10ch;
+    margin: 8px 0 14px;
+    color: var(--white);
+}
+
+.campaign p {
+    max-width: 350px;
+    color: #cccccc;
+}
+
+.campaign a {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 12px 16px;
+    border-radius: 25px;
+    background-color: var(--green);
+    color: var(--black);
+    font-size: 13px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.campaign a:hover {
+    background-color: var(--white);
+    transform: translateY(-4px);
+}
+
+footer {
+    padding: 40px 20px;
+    background-color: var(--black);
+    color: var(--white);
+    text-align: center;
+}
+
+.footer-logo {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+footer p {
+    margin: 10px 0 20px;
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.footer-links a {
+    color: #dddddd;
+    font-size: 13px;
+}
+
+.footer-links a:hover {
+    color: var(--green);
+}
+
+footer small {
+    color: #777777;
+    font-size: 12px;
+}
+
+.skeleton-card {
+    min-height: 300px;
+    border-radius: var(--radius);
+    background: linear-gradient(90deg, #e5e5e5 25%, #f5f5f5 50%, #e5e5e5 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(56, 189, 69, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(56, 189, 69, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(56, 189, 69, 0);
+    }
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar {
+        padding: 16px 40px;
+    }
+
+    .menu {
+        display: flex;
+    }
+
+    .hero,
+    .brands,
+    .categories,
+    .products,
+    .campaign {
+        width: calc(100% - 80px);
+    }
+
+    .hero {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        min-height: 550px;
+    }
+
+    .hero-shoe,
+    .hero-shoe img {
+        height: 420px;
+    }
+
+    .brand-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .category-grid,
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero {
+        padding: 55px 0 90px;
+    }
+
+    .brand-list {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .campaign {
+        padding: 70px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
