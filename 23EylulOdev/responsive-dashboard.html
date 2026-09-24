@@ -4,152 +4,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Grid Metrik Paneli</title>
+    <title>Bizim Sınıf Dashboard</title>
 
     <style>
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
         :root {
-            --bg: #121214;
-            --card-bg: #1a1a1e;
-            --border: #2a2a30;
-            --text: #f4f4f5;
-            --text-mute: #a1a1aa;
-            --accent: #f59c0b;
+            --bg: #090a0f;
+            --surface: #12131a;
+            --surface-hover: #181922;
+            --border: #22232e;
+            --border-focus: #3b3d4f;
+            --text: #ededef;
+            --text-muted: #8b8d98;
+            --accent: #e06c53;
             --success: #10b981;
+            --badge-bg: rgba(224, 108, 83, 0.1);
         }
 
         body {
-            font-family: 'Times New Roman', Times, serif;
+            min-height: 100vh;
             background: var(--bg);
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+                'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             color: var(--text);
-            padding: 30px 20px;
+            padding: 32px 20px;
+        }
+
+        .header-area {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            background: var(--badge-bg);
+            border: 1px solid rgba(224, 108, 83, 0.3);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-bottom: 12px;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulseAnim 2s infinite;
+        }
+
+        @keyframes pulseAnim {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.35;
+                transform: scale(1.4);
+            }
         }
 
         h1 {
-            margin-top: 24px;
-            margin-bottom: 30px;
-            font-size: 24px;
-            font-weight: 700;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.8px;
             color: var(--text);
-            text-align: center;
-            letter-spacing: -0.5px;
         }
 
-        /* Tek satırda responsive hali, ekran ne kadar büyürse o kadar kart sığdırır. */
-        .metric-grid {
+        .header-description {
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: 1fr;
             gap: 18px;
-            max-width: 1100px;
+            max-width: 1080px;
             margin: 0 auto;
         }
 
-        .metric-card {
-            background: var(--card-bg);
+        @media (min-width: 640px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .glass-card {
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 22px;
+            border-radius: 16px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 160px;
-            transition: all 0.2s ease;
+            min-height: 180px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease,
+                background-color 0.25s ease;
         }
 
-        .metric-card:hover {
-            transform: translateY(-4px);
-            border-color: #3f3f46;
-            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: var(--surface-hover);
+            border-color: var(--border-focus);
+            box-shadow: 0 16px 32px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .card-label {
             font-size: 12px;
-            font-weight: 600;
-            color: var(--text-mute);
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
         }
 
-        .card-num {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--text);
-            margin: 8px 0;
-            letter-spacing: -1px;
-        }
-
-        .card-growth {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--success);
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 4px;
+            font-size: 18px;
         }
 
-        .card-growth.warning {
-            color: var(--accent);
+        .card-val {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin: 14px 0 14px;
+            color: var(--text);
+        }
+
+        .card-footer {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 600;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>Akıllı CSS Metrik Paneli (auto-fit + minmax)</h1>
+    <div class="header-area">
 
-    <div class="metric-grid">
-
-        <div class="metric-card">
-            <span class="card-label">Anlık şarj istasyonu</span>
-
-            <div class="card-num">
-                125 soket
-            </div>
-
-            <span class="card-growth">
-                %92.4 aktif doluluk
-            </span>
+        <div class="header-badge">
+            <span class="pulse-dot"></span>
+            <span>Canlı Borsa Devrede</span>
         </div>
 
-        <div class="metric-card">
-            <span class="card-label">Bugünkü tüketim</span>
+        <h1>Fintech Platformu</h1>
 
-            <div class="card-num">
-                4.850 kWh
+        <p class="header-description">
+            Css Grid + Mobile First Query + Gpu 60 fps Animasyonlar
+        </p>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="glass-card">
+            <div class="card-top">
+                <span class="card-label">
+                    Toplam Hakediş
+                </span>
+                <div class="card-icon">💼</div>
             </div>
 
-            <span class="card-growth">
-                Günlük %12 artış yaşandı.
-            </span>
+            <div class="card-val">400.000 ₺</div>
+
+            <div class="card-footer">Betül Zaglı</div>
         </div>
 
-        <div class="metric-card">
-            <span class="card-label">GİB E-Şu Bildirimi</span>
 
-            <div class="card-num">
-                Hatırlatma: 0 Hata
+        <div class="glass-card">
+            <div class="card-top">
+                <span class="card-label">
+                    Selahaddin Ciro
+                </span>
+                <div class="card-icon">⚡</div>
             </div>
 
-            <span class="card-growth warning">
-                Şu anda Xades ve Ves onaylı
-            </span>
+            <div class="card-val">700.000 ₺</div>
+
+            <div class="card-footer">
+                EPDK / Şarj Altyapı
+            </div>
         </div>
 
-        <div class="metric-card">
-            <span class="card-label">Ortalama şarj süresi</span>
 
-            <div class="card-num">
-                36.5 DK
+        <div class="glass-card">
+            <div class="card-top">
+                <span class="card-label">
+                    Aktif Öğrenci
+                </span>
+                <div class="card-icon">🎓</div>
             </div>
 
-            <span class="card-growth">
-                120 kWh DC hızlı şarj
-            </span>
+            <div class="card-val">29 Geliştirici</div>
+
+            <div class="card-footer">
+                11. Gün MasterClass
+            </div>
         </div>
 
     </div>
@@ -157,5 +242,3 @@
 </body>
 
 </html>
-
-
