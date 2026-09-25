@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SARJ</title>
+</head>
+<script>
+
+const sarjSuresiHesapla = (
+  mevcutYuzde,
+  hedefYuzde,
+  bataryaKwh,
+  istasyonKw,
+  aracMaksSarjKw
+) => {
+  if (mevcutYuzde >= hedefYuzde) {
+    console.log("Şarja gerek yok, devam edebilirsiniz.");
+    return;
+  }
+
+  const gerekliEnerji =
+    bataryaKwh * (hedefYuzde - mevcutYuzde) / 100;
+
+  const kullanilacakGuc = Math.min(istasyonKw, aracMaksSarjKw);
+  const sureSaat = gerekliEnerji / kullanilacakGuc;
+  const sureDakika = sureSaat * 60;
+
+  console.log("Tahmini şarj süresi:", sureDakika, "dakika");
+};
+
+sarjSuresiHesapla(10, 90, 40, 50, 25);
+
+//FİYATLANDIRMA
+const fiyat = {
+  acNormal: 10,
+  dcHizli: 15,
+  kullanimUcreti: 5,
+  bataryaKwh: 40
+};
+
+const sarjTuru = "ac";
+
+if (sarjTuru === "ac") {
+  const acUcreti =
+    (fiyat.bataryaKwh * fiyat.acNormal) + fiyat.kullanimUcreti;
+  console.log("AC şarj ücreti: " + acUcreti + " ₺");
+
+} else if (sarjTuru === "dc") {
+  const dcUcreti =
+    (fiyat.bataryaKwh * fiyat.dcHizli) + fiyat.kullanimUcreti;
+  console.log("DC hızlı şarj ücreti: " + dcUcreti + " ₺");
+
+} else {
+  console.log("Şarj türü ac veya dc olmalıdır.");
+}
+// gunduz-gece
+const fiyatZamani = {
+  gunduz: 5,
+  gece: 3,
+  kullanimUcreti: 5,
+  bataryaKwh: 40
+};
+
+const sarjZamani = "gunduz";
+
+if (sarjZamani === "gunduz") {
+  const gunduzUcreti =
+    (fiyatZamani.bataryaKwh * fiyatZamani.gunduz) + fiyatZamani.kullanimUcreti;
+  console.log("Gündüz şarj ücreti: " + gunduzUcreti + " ₺");
+
+} else if (sarjZamani === "gece") {
+  const geceUcreti =
+    (fiyatZamani.bataryaKwh * fiyatZamani.gece) + fiyatZamani.kullanimUcreti;
+  console.log("Gece şarj ücreti: " + geceUcreti + " ₺");
+
+} else {
+  console.log("Şarja gerek yok.");
+}
+
+</script>
+<body>
+    
+</body>
+</html>
+

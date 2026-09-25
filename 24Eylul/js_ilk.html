@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js-ilkders</title>
+</head>
+<script>
+    //-var felakaeti süslü parentez dinlemez dışarıya sızar
+    /*
+    if(true){
+
+    var tehlikeliSayi=999
+     }
+    console.log("disariyaSizdiMi", tehlikeliSayi);
+
+
+
+// let
+if(true){
+    let guvenliSayi= 42;
+    const PI=3.1415;
+    console.log("oda içi", guvenliSayi, PI);
+
+}
+// console.warn(guvenliSayi);
+
+const API_URL= "https://www.kodusta.com/v1";
+console.log("API_URL");
+//let API_URL="TEKRAR EDEN LİNK"
+
+
+const arac={marka:"Togg", model:"T10X"};
+console.log(arac);
+arac="Beyaz";
+console.log(arac);
+
+
+// bu yasak
+arac={baskaObj:"obje"};
+console.log(arac);
+
+*/
+
+/*
+//Veri tipleri & tip dönüşümleri
+
+const isim="Selahaddin"; //string
+const bataryaKapasitesi=88.5 ;// number(float/int) olarak ayrım yok
+const sarjTamamlandi=false;//boolean
+let sonrakiRandevu;//undefined(kutu var içi boş)
+const servisNotu=null;//bilinçli olarak boş bırakılan değer
+const buyukSayi=653727838383839;//big integer
+const gizliAnahtar=Symbol("id");//symbol
+
+console.log(typeof isim);
+console.log(typeof bataryaKapasitesi);
+console.log(typeof sarjTamamlandi);
+console.log(typeof buyukSayi);
+console.log(typeof servisNotu);
+console.log(typeof gizliAnahtar);
+*/
+/*
+//otomatik tip çevrimi
+console.log("5"+2);//+ işareti metin birleştirir.
+console.log("5"-2);//eksi işareti stringi zorla inte çevirir
+console.log("5"*"4");//çarpma işareti stringi zorla inte çevirir.
+console.log(6 / 2);//bölme işareti stringi zorla inte çevirir.
+console.log("bes"*2);//NaN hatası alınır.
+*/
+/*
+console.log(typeof NaN);
+console.log(NaN===NaN);
+CONCOLE.log(Number.isNAN(NaN));
+*/
+/*
+//manuel tip değiştirme profosyonelce
+const stringFiyat="1437.77";
+const sayiFiyat=Number(stringFiyat);
+const pixelDegeri=parseInt("48px",10);
+const metinSayi=String(2026);
+
+console.log(stringFiyat);
+console.log(sayiFiyat);
+console.log(pixelDegeri);
+console.log(metinSayi);
+*/
+/*
+//katı eşitlik
+//neden her zaman === kullanmalıyız?
+console.log(5 =="5") //true gevsek eşitlik tipi zorla çevirir asla kullanma
+console.log(5 ==="5") // false sıkı eşitlik kullan
+console.log(0 ==false);//true gevsek eşitlik
+console.log(0 ===false);//sıkıeşitlik false
+console.log(null==undefined)//true 
+console.log(null===undefined)//false
+*/
+/*
+//tempate literals
+const kullanici="Esra Ergün";
+const bakiye=1000;
+const harcama=10000;
+//modern E6 STANDARLARI
+const mesaj=`Sayın ${kullanici},
+bugünkü harcamanız: ${harcama},
+durum: ${bakiye-harcama > 1000 ? "güvenli bakiye" : "kritik bakiye"}`;
+
+console.log(mesaj);
+
+*/
+/*
+const bataryaSeviyesi=50;
+const istasyonUygunlugu=true;
+const bakiyeTL=450;
+const minGirisTutari=200;
+
+if (!istasyonUygunlugu) {
+    console.log('istasyon servis dışı veye meşgul')
+}else if (bakiyeTL< minGirisTutari) {
+    console.log('bakiiye yetersiz! en az ${minGirisTutari}girilmeli')
+}else if (bataryaSeviyesi<=20) {
+    console.log('kritik seviye');
+}else{
+    console.log("start");
+}
+*/
+/*
+//JS DE ŞU 6 DEĞER  SFALSE KABUL EDİLİR: false, 0 , null , "" ,undifined ,NaN
+// BUNUN DIŞINDAKİ HER ŞEY TRU OLARAK KABUL GÖRÜR
+const kullaniciGirdisi="";
+if(kullaniciGirdisi){
+console.log("girdi dolu")
+}else{
+    console.log("girdi boş");
+}
+*/
+/*
+// kosul dogruysa deger : yanlissa_deger(if else yerine tek drumlu konularda bunu kullanırız)
+
+const soketDurumu="mesgul";
+const durumMesajı = soketDurumu === "uygun" ? "Soket boşta" : "SOKET KULLANIMDA";
+console.log(durumMesajı);
+
+*/
+/*
+//error functions
+function toplaKlasik(num1 , num2) {
+    return num1 + num2;
+}
+const toplaModern = (num1 , num2) => {
+    return num1 + num2
+}
+
+//tek satırlık function arrow
+const toplaKisa=(sayi1 , sayi2) => sayi1+sayi2;
+
+// tek paremetreli
+const karesiniAl=sayi => sayi * sayi;
+
+const profilÜret=(ad,rol)=>(
+    {ad:ad,
+    rol:rol,
+    kayitTarihi:2026
+ });
+
+console.log("Toplama sonucu:",toplaModern(15,27));
+console.log("KaresiniAl sonucu:",karesiniAl(15));
+console.log("Profil",profilÜret("Tuba", "ogrenci"));
+/*
+//meydan okuma idndirimli sepet tutari hesaplayıcı
+const indirimHesapla = (ürünFiyat, indirimTutari) =>
+    ürünFiyat - (ürünFiyat * indirimTutari / 100);
+console.log("İndirim hesapla:", indirimHesapla(1000,10));
+*/
+const sarjSuresiHesapla = (
+  mevcutYuzde,
+  hedefYuzde,
+  bataryaKwh,
+  istasyonKw
+) => {
+  const eksikEnerji = bataryaKwh * (hedefYuzde - mevcutYuzde) / 100;
+  const sureSaat = eksikEnerji / istasyonKw;
+  const sureDakika = sureSaat * 60;
+
+  console.log("Tahmini şarj süresi:", sureDakika, "dakika");
+};
+
+sarjSuresiHesapla(10, 90, 45, 50); /// buna gece ve gündüz tarifesi ekle ve fiyatlandır./fiyat-gece-gündüztarifesi ve bu 3 tane olucak.
+</script>
+<body>
+    
+</body>
+</html>
