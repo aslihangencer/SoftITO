@@ -42,13 +42,11 @@ const fiyat = {
 const sarjTuru = "ac";
 
 if (sarjTuru === "ac") {
-  const acUcreti =
-    (fiyat.bataryaKwh * fiyat.acNormal) + fiyat.kullanimUcreti;
+  const acUcreti = (fiyat.bataryaKwh * fiyat.acNormal) + fiyat.kullanimUcreti;
   console.log("AC şarj ücreti: " + acUcreti + " ₺");
 
 } else if (sarjTuru === "dc") {
-  const dcUcreti =
-    (fiyat.bataryaKwh * fiyat.dcHizli) + fiyat.kullanimUcreti;
+  const dcUcreti = (fiyat.bataryaKwh * fiyat.dcHizli) + fiyat.kullanimUcreti;
   console.log("DC hızlı şarj ücreti: " + dcUcreti + " ₺");
 
 } else {
@@ -65,13 +63,11 @@ const fiyatZamani = {
 const sarjZamani = "gunduz";
 
 if (sarjZamani === "gunduz") {
-  const gunduzUcreti =
-    (fiyatZamani.bataryaKwh * fiyatZamani.gunduz) + fiyatZamani.kullanimUcreti;
+  const gunduzUcreti = (fiyatZamani.bataryaKwh * fiyatZamani.gunduz) + fiyatZamani.kullanimUcreti;
   console.log("Gündüz şarj ücreti: " + gunduzUcreti + " ₺");
 
 } else if (sarjZamani === "gece") {
-  const geceUcreti =
-    (fiyatZamani.bataryaKwh * fiyatZamani.gece) + fiyatZamani.kullanimUcreti;
+  const geceUcreti = (fiyatZamani.bataryaKwh * fiyatZamani.gece) + fiyatZamani.kullanimUcreti;
   console.log("Gece şarj ücreti: " + geceUcreti + " ₺");
 
 } else {
