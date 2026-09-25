@@ -19,8 +19,7 @@ const sarjSuresiHesapla = (
     return;
   }
 
-  const gerekliEnerji =
-    bataryaKwh * (hedefYuzde - mevcutYuzde) / 100;
+  const gerekliEnerji = bataryaKwh * (hedefYuzde - mevcutYuzde) / 100;
 
   const kullanilacakGuc = Math.min(istasyonKw, aracMaksSarjKw);
   const sureSaat = gerekliEnerji / kullanilacakGuc;
@@ -65,7 +64,7 @@ const sarjZamani = "gunduz";
 if (sarjZamani === "gunduz") {
   const gunduzUcreti = (fiyatZamani.bataryaKwh * fiyatZamani.gunduz) + fiyatZamani.kullanimUcreti;
   console.log("Gündüz şarj ücreti: " + gunduzUcreti + " ₺");
-
+  
 } else if (sarjZamani === "gece") {
   const geceUcreti = (fiyatZamani.bataryaKwh * fiyatZamani.gece) + fiyatZamani.kullanimUcreti;
   console.log("Gece şarj ücreti: " + geceUcreti + " ₺");
