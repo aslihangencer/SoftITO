@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <!-- Türkçe karakterlerin doğru görüntülenmesini sağlar. -->
+    <meta charset="UTF-8">
+
+    <!-- Sayfanın telefon ve tablet ekranlarında doğru ölçeklenmesini sağlar. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sipariş ve Gelir Kokpit Dashboard</title>
+
+    <style>
+        /* Tüm elemanlarda padding ve border değerlerini genişliğe dahil eder */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Tasarımda ortak kullanılacak renk ve font değişkenlerini tanımlar */
+        :root {
+            --bg: #f8f7f4;
+            --card: #ffffff;
+            --border: #e6e5df;
+            --text: #181716;
+            --muted: #6b6963;
+            --clay: #c85a32;
+            --clay-hover: #b04e29;
+            --danger: #ef4444;
+            --font-main: "Plus Jakarta Sans", system-ui, sans-serif;
+            --font-mono: "JetBrains Mono", monospace;
+        }
+
+        /* Sayfanın temel arka plan, yazı tipi ve boşluk ayarlarını yapar */
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            padding: 36px 16px;
+            line-height: 1.5;
+        }
+
+        /* İçerik alanının maksimum genişliğini sınırlar ve ortalar */
+        .kokpit {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* BAŞLIK ALANI*/
+
+        /* Üst başlık alanının alt boşluğunu ve çizgisini ayarlar */
+        .header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Küçük üst etiketi büyük harfe çevirir ve renk verir */
+        .header__tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--clay);
+            font-weight: 700;
+        }
+
+        /* Ana sayfa başlığının boyutunu ve kalınlığını ayarlar */
+        .header__title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* KPI KARTLARI*/
+
+        /* Üç istatistik kartını eşit genişlikte 3 sütun halinde yan yana dizer */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Tek bir istatistik kartının kutu tasarımını belirler */
+        .kpi-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+        }
+
+        /* Kart içindeki küçük açıklama yazısının stilini ayarlar */
+        .kpi-card span {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* Kart içindeki büyük sayısal değerlerin fontunu ayarlar */
+        .kpi-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            margin-top: 4px;
+        }
+
+        /*FORM VE LİSTE DÜZENİ */
+
+        /* Sol taraf form, sağ taraf liste olacak şekilde iki sütunlu düzen kurar */
+        .layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+        }
+
+        /* Ekran küçüldüğünde yapıyı tek sütuna düşürür */
+        @media (max-width: 768px) {
+
+            .layout,
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            #categoryFilter {
+                width: 100%;
+            }
+        }
+
+        /* Beyaz arka planlı içerik panellerinin stilini belirler */
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        /* Panel içindeki alt başlıkların boşluk ve çizgisini ayarlar */
+        .panel h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* FORM ELEMANLARI */
+
+        /* Form satırları arasındaki alt boşluğu ayarlar */
+        .field {
+            margin-bottom: 12px;
+        }
+
+        /* Form etiketlerinin görünümünü belirler */
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        /* Form giriş kutularının ve seçim menülerinin stilini ayarlar */
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 13px;
+            font-family: inherit;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        /* Inputlara tıklandığında çerçeve rengini turuncu yapar */
+        .field input:focus,
+        .field select:focus {
+            outline: none;
+            border-color: var(--clay);
+            background: #fff;
+        }
+
+        /* Kaydet butonunun genel tasarımını ayarlar */
+        .btn-submit {
+            width: 100%;
+            background: var(--clay);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        /* Kaydet butonunun üzerine gelince rengini koyulaştırır */
+        .btn-submit:hover {
+            background: var(--clay-hover);
+        }
+
+        /* FİLTRE VE SİPARİŞ LİSTESİ */
+
+        /* Arama çubuğu ile kategori seçimini yan yana tutar */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        /* Arama inputunun genişlik ve stilini ayarlar */
+        .filter-bar input {
+            flex: 1;
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 13px;
+            font-family: inherit;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        /* Arama kutusuna tıklandığında focus rengini uygular */
+        .filter-bar input:focus,
+        .filter-bar select:focus {
+            outline: none;
+            border-color: var(--clay);
+            background: #fff;
+        }
+
+        /* Kategori filtreleme menüsünün genişliğini ve stilini ayarlar */
+        #categoryFilter {
+            width: 130px;
+            font-size: 12px;
+            padding: 6px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        /* Sipariş kartlarının alt alta sıralanmasını sağlar */
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Her bir sipariş kartının kutu düzenini ve hizalamasını yapar */
+        .order-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Ürün adının yazı boyutunu ayarlar */
+        .order-item h5 {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Ürün fiyatı yazısının rengini ve boyutunu ayarlar */
+        .order-item p {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* Kategori rozeti ve sil butonunu bir arada tutar */
+        .meta-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Kategori etiketinin temel tasarımını belirler */
+        .badge {
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-family: var(--font-mono);
+        }
+
+        /* Mobilya kategorisi için mavi tonlarında rozet rengi verir */
+        .badge--mobilya {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        /* Aydınlatma kategorisi için sarı tonlarında rozet rengi verir */
+        .badge--aydinlatma {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        /* Mutfak kategorisi için yeşil tonlarında rozet rengi verir */
+        .badge--mutfak {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Sil butonunun sade ve çerçeveli görünümünü ayarlar */
+        .btn-del {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Sil butonunun üzerine gelince kırmızı renge dönüşmesini sağlar */
+        .btn-del:hover {
+            background: var(--danger);
+            color: #fff;
+            border-color: var(--danger);
+        }
+
+        /* Ürün bulunamadığında gösterilecek uyarı alanının stilini ayarlar */
+        .empty-state {
+            padding: 24px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Uygulamanın tüm içeriğini saran ana kapsayıcı kutu -->
+    <div class="kokpit">
+
+        <!-- Sayfanın başlık bölümü -->
+        <header class="header">
+            <!-- Küçük turuncu etiket yazısı -->
+            <span class="header__tag">Sipariş Takip</span>
+            <!-- Sayfanın ana başlığı -->
+            <h1 class="header__title">Sipariş Yönetim Kokpiti</h1>
+        </header>
+
+        <!-- Sipariş verilerini özetleyen KPI kartları alanı -->
+        <section class="kpi-grid">
+            <!-- Toplam kayıtlı sipariş sayısını gösteren kart -->
+            <div class="kpi-card">
+                <span>Kayıtlı Sipariş</span>
+                <h3 id="kpiCount">0</h3>
+            </div>
+
+            <!-- Toplam sipariş tutarını gösteren kart -->
+            <div class="kpi-card">
+                <span>Toplam Sipariş Tutarı</span>
+                <h3 id="kpiTotal">0 TL</h3>
+            </div>
+
+            <!-- Ortalama ürün fiyatını gösteren kart -->
+            <div class="kpi-card">
+                <span>Ortalama Ürün Fiyatı</span>
+                <h3 id="kpiAvg">0 TL</h3>
+            </div>
+        </section>
+
+        <!-- Sol tarafta form, sağ tarafta liste alanını tutan ana yapı -->
+        <main class="layout">
+
+            <!-- Yeni sipariş ekleme formunun bulunduğu panel -->
+            <section class="panel">
+                <h4>Yeni Sipariş Kaydı</h4>
+
+                <!-- Form gönderildiğinde JavaScript ile yakalanacak form yapısı -->
+                <form id="orderForm">
+
+                    <!-- Ürün adı giriş alanı -->
+                    <div class="field">
+                        <label for="prod-name">Ürün Adı</label>
+                        <input type="text" id="prod-name" placeholder="Örneğin: Sehpa" required>
+                    </div>
+
+                    <!-- Kategori seçim menüsü -->
+                    <div class="field">
+                        <label for="prod-cat">Kategori</label>
+                        <select id="prod-cat">
+                            <option value="Mobilya">Mobilya</option>
+                            <option value="Aydınlatma">Aydınlatma</option>
+                            <option value="Mutfak">Mutfak</option>
+                        </select>
+                    </div>
+
+                    <!-- Fiyat giriş alanı (step="50" kuralı korunmuştur) -->
+                    <div class="field">
+                        <label for="prod-price">Fiyat</label>
+                        <input type="number" id="prod-price" value="3250" min="100" step="50" required>
+                        <button type="submit" class="btn-submit">Siparişi Kaydet</button>
+                    </div>
+
+                </form>
+            </section>
+
+            <!-- Arama, filtreleme ve ürün listesinin yer aldığı sağ panel -->
+            <section class="panel">
+                <div class="filter-bar">
+                    <!-- Ürün adına göre anlık arama/filtreleme inputu -->
+                    <input type="text" id="searchInput" placeholder="Ürün adına göre filtrele">
+
+                    <!-- Kategorilere göre filtreleme yapmayı sağlayan açılır menü -->
+                    <select id="categoryFilter">
+                        <option value="ALL">Tüm Kategoriler</option>
+                        <option value="Mobilya">Mobilya</option>
+                        <option value="Aydınlatma">Aydınlatma</option>
+                        <option value="Mutfak">Mutfak</option>
+                    </select>
+                </div>
+
+                <!-- JavaScript ile filtrelenen sipariş kartlarının ekleneceği boş liste alanı -->
+                <div id="orderContainer" class="order-list"></div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+    // Başlangıç siparişlerini bir dizi içinde tutuyoruz.
+    let orders = [
+        { id: 1, name: "Sehpa", category: "Mobilya", price: 6500 },
+        { id: 2, name: "Abajür", category: "Aydınlatma", price: 7500 },
+        { id: 3, name: "Koltuk", category: "Mobilya", price: 8500 },
+        { id: 4, name: "Bulaşık Makinası", category: "Mutfak", price: 10000 },
+        { id: 5, name: "Ocak", category: "Mutfak", price: 15000 }
+    ];
+
+    // Yeni siparişlere benzersiz bir id vermek için sayaç kullanıyoruz.
+    let nextId = 6;
+
+    // HTML içindeki elemanları JavaScript'te kullanmak için seçiyoruz.
+    const orderContainer = document.getElementById("orderContainer");
+    const orderForm = document.getElementById("orderForm");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const kpiCount = document.getElementById("kpiCount");
+    const kpiTotal = document.getElementById("kpiTotal");
+    const kpiAvg = document.getElementById("kpiAvg");
+
+    // KPI, ekrandaki özet bilgi kartlarıdır (Key Performance Indicator).
+    // Bu fonksiyon sipariş sayısını, toplam tutarı ve ortalama fiyatı günceller.
+    function updateKPIs(dataList) {
+        // Toplam sipariş sayısını ekrana yazar.
+        kpiCount.textContent = dataList.length;
+
+        // Eğer liste boşsa istatistik değerlerini sıfırlar.
+        if (dataList.length === 0) {
+            kpiTotal.textContent = "0 ₺";
+            kpiAvg.textContent = "0 ₺";
+            return;
+        }
+
+        // Toplam fiyatı hesaplamak için başlangıçta 0 değeri veriyoruz.
+        let total = 0;
+
+        // Listedeki her ürünün fiyatını toplayarak toplam geliri hesaplar.
+        dataList.forEach(function (order) {
+            total = total + order.price;
+        });
+
+        // Sayıyı Türkçe biçimde yazar ve sonuna TL işareti ekler.
+        kpiTotal.textContent = total.toLocaleString("tr-TR") + " ₺";
+
+        // Toplam tutarı ürün sayısına bölerek ortalama fiyatı bulur.
+        let average = total / dataList.length;
+
+        // Ortalama fiyatı yuvarlayıp ekrana yazar.
+        kpiAvg.textContent = Math.round(average).toLocaleString("tr-TR") + " ₺";
+    }
+
+    // Ürünleri arama kelimesine ve kategoriye göre filtreleyip ekranda listeleyen ana fonksiyon
+    function renderOrders() {
+        // Arama kutusundaki yazıyı küçük harfe çevirip boşluklarını temizler.
+        let term = searchInput.value.toLowerCase().trim();
+
+        // Seçilen kategori değerini alır.
+        let selectedCat = categoryFilter.value;
+
+        // Filtrelenen ürünleri tutacak boş bir dizi oluşturur.
+        let filtered = [];
+
+        // Tüm ürünleri tek tek dolaşır.
+        orders.forEach(function (order) {
+            // Ürün adının aranan terimi içerip içermediğini kontrol eder.
+            let matchesName = order.name.toLowerCase().includes(term);
+
+            // Kategori filtresine uyup uymadığını bu değişkende tutacağız.
+            let matchesCategory;
+
+            // "ALL" seçildiyse tüm kategorilere izin verir, aksi halde kategori eşleşmesine bakar.
+            if (selectedCat === "ALL") {
+                matchesCategory = true;
+            } else {
+                matchesCategory = order.category === selectedCat;
+            }
+
+            // Hem isim hem kategori uyuşuyorsa ürünü filtrelenmiş listeye ekler.
+            if (matchesName && matchesCategory) {
+                filtered.push(order);
+            }
+        });
+
+        // Yeni listeyi basmadan önce ekrandaki eski ürünleri temizler.
+        orderContainer.innerHTML = "";
+
+        // Eğer eşleşen ürün yoksa kullanıcıya uyarı mesajı gösterir.
+        if (filtered.length === 0) {
+            orderContainer.innerHTML = `
+                <div style="padding:24px; text-align:center; color:var(--muted); font-size:12px">
+                    Kriterlere Uygun Ürün Bulunamadı
+                </div>
+            `;
+
+            // Listede ürün kalmadığı için KPI'ları sıfırlar.
+            updateKPIs([]);
+            return;
+        }
+
+        // Filtrelenen her ürünü döngüye alarak ekrana kart olarak ekler.
+        filtered.forEach(function (order) {
+            // Her ürün için yeni bir HTML article elemanı üretir.
+            let item = document.createElement("article");
+
+            // Elementin CSS sınıfını atar.
+            item.className = "order-item";
+
+            // Kategoriye göre kullanılacak CSS sınıfını tutacak değişken.
+            let badgeClass = "";
+
+            // Kategoriye göre kullanılacak renk sınıfını seçiyoruz.
+            if (order.category === "Mobilya") {
+                badgeClass = "badge--mobilya";
+            } else if (order.category === "Aydınlatma") {
+                badgeClass = "badge--aydinlatma";
+            } else {
+                badgeClass = "badge--mutfak";
+            }
+
+            // Ürün adı, fiyatı, kategorisi ve sil butonunu içeren HTML yapısını yazar.
+            item.innerHTML = `
+                <div>
+                    <h5>${order.name}</h5>
+                    <p>Birim Fiyat: ${order.price.toLocaleString("tr-TR")} ₺</p>
+                </div>
+
+                <div class="meta-box">
+                    <span class="badge ${badgeClass}">${order.category}</span>
+                    <button class="btn-del">Sil</button>
+                </div>
+            `;
+
+            // Ürün kartı içindeki sil butonunu seçer.
+            let deleteButton = item.querySelector(".btn-del");
+
+            // Sil butonuna tıklandığında ürünü diziden çıkaran olay dinleyicisi.
+            deleteButton.addEventListener("click", function () {
+                // Silinecek ürünün ana dizideki yerini bulur.
+                let orderIndex = orders.indexOf(order);
+
+                // splice ile seçilen siparişi orders dizisinden siliyoruz.
+                orders.splice(orderIndex, 1);
+
+                // Listeyi ve KPI kartlarını günceller.
+                renderOrders();
+            });
+
+            // Oluşturulan ürünü ekrandaki liste alanına ekler.
+            orderContainer.appendChild(item);
+        });
+
+        // Listelenen ürünlere göre üst KPI kartlarını günceller.
+        updateKPIs(filtered);
+    }
+
+    // Form gönderildiğinde çalışan olay dinleyicisi (event listener)
+    orderForm.addEventListener("submit", function (event) {
+        // Formun sayfayı yenilemesini engeller.
+        event.preventDefault();
+
+        // Form alanlarına girilen değerleri alır.
+        let name = document.getElementById("prod-name").value.trim();
+        let category = document.getElementById("prod-cat").value;
+        let price = Number(document.getElementById("prod-price").value);
+
+        // Ürün adı boş bırakıldıysa uyarı verir ve işlemi durdurur.
+        if (name === "") {
+            alert("Lütfen ürün adı giriniz.");
+            return;
+        }
+
+        // Fiyat 100 TL'den azsa veya geçersizse uyarı verir ve durdurur.
+        if (price < 100 || isNaN(price)) {
+            alert("Lütfen 100 TL'den büyük geçerli bir fiyat giriniz.");
+            return;
+        }
+
+        // Girilen bilgilerle yeni sipariş nesnesi oluşturur.
+        let newOrder = {
+            id: nextId,
+            name: name,
+            category: category,
+            price: price
+        };
+
+        // Yeni siparişi orders dizisine ekliyoruz.
+        orders.push(newOrder);
+
+        // Sonraki sipariş için id değerini 1 artırıyoruz.
+        nextId++;
+
+        // Form kutularını sıfırlar.
+        orderForm.reset();
+
+        // Fiyat kutusuna varsayılan değeri tekrar yazar.
+        document.getElementById("prod-price").value = 3250;
+
+        // İmleci tekrar ürün adı alanına odaklar.
+        document.getElementById("prod-name").focus();
+
+        // Listeyi güncelleyerek yeni ürünü ekranda gösterir.
+        renderOrders();
+    });
+
+    // Arama kutusuna her harf yazıldığında listeyi anlık olarak filtreler.
+    searchInput.addEventListener("input", function () {
+        renderOrders();
+    });
+
+    // Kategori açılır menüsü değiştirildiğinde listeyi günceller.
+    categoryFilter.addEventListener("change", function () {
+        renderOrders();
+    });
+
+    // Sayfa ilk açıldığında başlangıç ürünlerinin listelenmesini sağlar.
+    renderOrders();
+</script>
+</body>
+
+</html>

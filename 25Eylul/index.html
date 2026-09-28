@@ -1,0 +1,174 @@
+<script>
+    /*
+    // 1. deger kopyalama
+    let sayi1=100;
+    let sayi2=sayi1;
+    sayi2=250;
+
+    console.log("sayi1",sayi1);
+    console.log("sayi2",sayi2);
+
+
+    //dizi kopyalama
+    const istasyonlarA=["Kadıköy DC", "Beşiktaş AC"];
+    const istasyonlarB=istasyonlarA;
+    istasyonlarB.push("Üsküdar Ultra DC");
+
+
+    console.log("İstasyonlar A",istasyonlarA);
+    console.log("İstasyonlar B", istasyonlarB);
+    console.log(istasyonlarA===istasyonlarB);
+
+
+
+    ///doğru diiz kopyalama
+    const bagimsizKopya=[...istasyonlarA];
+    bagimsizKopya.push("Maltepe Hızlı");
+    console.log("orijinal liste" , istasyonlarA.length);
+     console.log("yeni klon liste" , bagimsizKopya.length);
+
+// dizi elemanları ham veri seti
+const sarjIstasyonlari = [
+    { id: "IST-01", lokasyon: "Zorlu Center", tipi: "DC", gucKw: 180, durum: "Aktif", seansAdet: 45, tarifeTL: 12 },
+    { id: "IST-02", lokasyon: "Akasya Center", tipi: "AC", gucKw: 120, durum: "Aktif", seansAdet: 11, tarifeTL: 9 },
+    { id: "IST-03", lokasyon: "Kanyon AVM", tipi: "DC", gucKw: 300, durum: "Pasif", seansAdet: 55, tarifeTL: 15 },
+    { id: "IST-04", lokasyon: "Mall of Istanbul", tipi: "AC", gucKw: 220, durum: "Aktif", seansAdet: 44, tarifeTL: 8.5 }
+];
+
+// map ile döngü
+// Veriyi dönüştürür ve her elemanı işler.
+// Aynı boyutta YENİ bir dizi döner.
+const istasyonOzetleri = sarjIstasyonlari.map(ist => {
+    return `${ist.lokasyon} (${ist.tipi} - ${ist.gucKw} kW) -> ${ist.durum.toUpperCase()}`;
+});
+
+console.log("Map sonucu" , istasyonOzetleri);
+
+const sadeceLokasyonlar=sarjIstasyonlari.map(ist=>ist.lokasyon);
+console.log("Lokasyonlar", sadeceLokasyonlar);
+
+//filter
+//sadece dc ve aktif istasyınalrı göster
+const aktifDcIstasyonlar = sarjIstasyonlari.filter(
+    (istasyon) => istasyon.tipi === "DC" && istasyon.durum === "Aktif"
+);
+
+console.table(aktifDcIstasyonlar);
+// find ve findIndex(tekil eleman arama)
+//spesifik uniquıe şeyler aramak içim kullanılır tc veya ıd gibi
+const bulunan=sarjIstasyonlari.find(ist=>ist.id==="IST-03");
+console.log("İstasyon",bulunan.lokasyon,bulunan.gucKw,"KW");
+
+
+/// some ve every mantıksal kontroller(boolean dönerler)
+const bakimdaOlanVarmi=sarjIstasyonlari.some(ist=>ist.durum==="bakim")
+const hepsiAktifmi=sarjIstasyonlari.every(ist=>ist.surum==="Aktif");
+console.log("Bakımda olan var mı?",bakimdaOlanVarmi);
+console.log("Tüm istasyonlar aktif mi?", hepsiAktifmi);
+
+//reduce() toplama
+const toplamSeans = sarjIstasyonlari.reduce((aku, istasyon) => {
+    return aku+istasyon.seansAdet;
+},0)//baslangiç değeri sıfır
+console.log("Toplam yapılan sarj seansı", toplamSeans);
+
+//aktif olan dc toplam güç kapasitesii (zincirleme: filter-map-reduce)
+const aktifDcToplamGuc = sarjIstasyonlari
+    .filter(ist => ist.durum === "Aktif" && ist.tipi === "DC")
+    .map(ist => ist.gucKw)
+    .reduce((toplam, guc) => toplam + guc, 0);
+
+console.log("Aktif dc toplam güc kapasitesi" , aktifDcToplamGuc,"Kw")
+
+//zincirleme(filte-map) 10 tlden fala olanları listele
+const pahaliIstasyonlar = sarjIstasyonlari.filter(ist => ist.durum === "Aktif" && ist.tarifeTL > 10).map(ist => ist.lokasyon);
+
+console.log("10 ₺ den pahalı aktif istasyonlar" , pahaliIstasyonlar);
+
+///Object kapsamlı isatsyon nesnesi  metotlar
+
+const istasyonYönetimi={
+    kod:"TR-IST-006",
+    adi:"Kadiköy Dc Hizli Sarj" ,
+    kapasiteSoket: 4,
+    aktifSoketler:["Soket-A","Soket-B"],
+    tarife:{
+        birimTL:12,
+        geceIndirimYuzdesi:20,
+    },
+
+    musaitlikRaporu: function() {
+        const bostaAdet = this.kapasiteSoket - this.aktifSoketler.length;
+
+        return bostaAdet;
+    },
+
+    geceTarifesiHesapla: function(){
+    const indirim=this.tarife.birimTL * (this.tarife.geceIndirimYuzdesi/100);
+    return this.tarife.birimTL-indirim
+}
+};
+
+console.log(istasyonYönetimi.musaitlikRaporu());
+console.log("Gece Birim Fİyat",istasyonYönetimi.geceTarifesiHesapla()," ₺")
+console.log("Keys",Object.keys(istasyonYönetimi));
+console.log("Values",Object.values(istasyonYönetimi.tarife))
+
+
+///obje
+const aracVerisi={
+    marka:"Togg",
+    model:"T10X",
+    yil:2026,
+    batarya:{
+        kapasiteKwh:88.5,
+        kimya: "NMC",
+        garantiYil:8
+    },
+    renk:"Gece mavisi"
+    };
+
+    // Eski yöntem: const marka = aracVerisi.marka;
+
+    // Modern
+    const { marka, model, renk = "Beyaz" } = aracVerisi;
+    console.log(`Araç: ${marka} ${model} | renk: ${renk}`);
+
+    const { batarya: { kapasiteKwh: bataryaBoyutu, kimya } } = aracVerisi;
+    console.log(`Batarya ${bataryaBoyutu} Kwh, Hücre Kimyası: ${kimya}`);
+
+
+
+
+//react prop parametre ile aynı mantık
+const araciEkranaBas=({marka,model,batarya:{kapasiteKwh}})=>{
+    console.log('Gelen Araç ${marka} ${model} [${kapasiteKwh} kwh]');
+};
+araciEkranaBas(aracVerisi);
+
+
+const koordinatlar=[41.0082,28.9785];
+const [enlem,boylam]=koordinatlar;
+console.log(`Enlem ${enlem}, Boylam ${boylam}`);
+
+const puanlar = [95,88,76,65,54];
+const [birinci,ikinci,...kalanlar]=puanlar;
+console.log("Şampiyon",birinci,"İkinci",ikinci,"Kalanlar",kalanlar);
+
+*/
+const temelTarife={
+    kdvOrani:0.20,
+    paraBirimi:"TL",
+    geceTarifesiVar:true,
+};
+
+const guncelTarife={
+    ...temelTarife,    //eski özellikleri aynen kopyala
+    birimFiyat:11.50,  //yeni özellik ekle
+    paraBirimi: "TRY"  //VAR OLAN ÖZELLİĞİ EZ.OVERRİDE
+};
+console.log("Yeni tarife Nesnesi",guncelTarife);
+
+
+
+</script>
